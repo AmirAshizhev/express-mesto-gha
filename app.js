@@ -5,10 +5,18 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
+app.get('/', (req, res) =>{
+  res.send('Hello world')
+})
+
+app.post('/', express.json(), (req, res) => {
+  res.send(req.body)
+})
+
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
-  useCreateIndex: true,
-    useFindAndModify: false
+  // useCreateIndex: true,
+  //   useFindAndModify: false
 });
 
 app.listen(PORT, () => {
@@ -17,7 +25,5 @@ app.listen(PORT, () => {
 });
 
 
-
-// подключаемся к серверу mongo
 
 
