@@ -12,11 +12,12 @@ const cardSchema = new mongoose.Schema({
     require: true,
   },
   owner:{
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     require: true,
   },
   likes:[{
-    type: ObjectId,
+    // так ли обозначатьб?
+    type: mongoose.Schema.Types.ObjectId,
     default: []
   }],
   createdAt:{
