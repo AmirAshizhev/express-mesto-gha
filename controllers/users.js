@@ -19,3 +19,17 @@ exports.createUser = (req, res) => {
 
 }
 
+exports.updateProfileInfo = (req, res) => {
+  // console.log(req.user._id)
+  const {name, about} = req.body;
+  User.findByIdAndUpdate(req.user._id, {name, about})
+    .then(user => res.send({ data: user }))
+}
+
+exports.updateProfileAvatar = (req, res) => {
+  const {avatar} = req.body;
+  User.findByIdAndUpdate(req.user._id, {avatar})
+    .then(user => res.send({ data: user }))
+}
+
+
