@@ -10,7 +10,7 @@ exports.createCard = (req, res) => {
   console.log(req.user._id)
   const owner = req.user._id
   const { name, link } = req.body;
-  Card.create({name, link, owner})
+  Card.create({name, link, owner, new: true, runValidators: true})
     .then(card => res.send({ data: card }))
 
 }
