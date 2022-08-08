@@ -25,19 +25,32 @@ exports.getUserById = (req, res) => {
 
 exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
-  User.create({name, about, avatar})
+  User.create({name, about, avatar, new: true, runValidators: true})
+    .orFail(() => {Error('Пользователь не создан')})
     .then(user => res.send({ data: user }))
+    .catch((err) => BAD_REQUEST(err, req, res))
+    // .catch((err) => ValidError(err, req, res));
+    .catch((err) => {
+      if(err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Некорректные данные' });
+      }
+      return res.status(500).send({ message: 'Произошла ошибка' });
+    })
+};
+const BAD_REQUEST = (err, req, res) => {
+  if (err.name === 'CastError || ValidationError') {
+    res.status(400).send({ message: 'Hекорректные данные' });
+    return;
+  }
+};
 
-}
+
 
 exports.updateProfileInfo = (req, res) => {
   // console.log(req.user._id)
   const {name, about} = req.body;
   User.findByIdAndUpdate(req.user._id, {name, about})
-    .orFail(()=>{
-      res.status(400).send({message: 'Пользователь не найден'})
-      return
-    })
+
     .then(user => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
