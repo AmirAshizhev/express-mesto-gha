@@ -16,7 +16,6 @@ const cardSchema = new mongoose.Schema({
     require: true,
   },
   likes:[{
-    // так ли обозначатьб?
     type: mongoose.Schema.Types.ObjectId,
     default: []
   }],

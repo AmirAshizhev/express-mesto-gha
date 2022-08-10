@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use((req, res, next) => {
   req.user = {
-    _id: '62ef929170d4081092580332'
+    _id: '62f3e449d97026ff607e92a0'
   };
 
   next();
@@ -33,7 +33,6 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'))
 
 app.listen(PORT, () => {
-  // Если всё работает, консоль покажет, какой порт приложение слушает
   console.log(`App listening on port ${PORT}`);
 });
 
