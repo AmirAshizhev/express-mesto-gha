@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { User } = require('../models/user');
 
 exports.getUsers = (req, res) => {
@@ -81,5 +82,33 @@ exports.updateProfileAvatar = (req, res) => {
       } else {
         res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
+    });
+};
+
+exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(401).send({ message: 'Переданы невалидные данные' });
+  }
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: 'Пользователь по указанномое email не найден' });
+      }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (matched) {
+            const token = jwt.sign({ _id: user._id }, 'some-secret-key');
+            return res.send({ token });
+          }
+          return res.status(401).send({ message: 'Переданы некорректные данные' });
+        });
+    })
+    .catch((err) => {
+      res
+        .status(401)
+        .send({ message: err.message });
     });
 };
