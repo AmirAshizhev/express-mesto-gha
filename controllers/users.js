@@ -100,7 +100,8 @@ exports.login = (req, res) => {
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (matched) {
-            const token = jwt.sign({ _id: user._id }, 'some-secret-key');
+            const token = jwt.sign({ _id: user._id }, 'some-secret-word');
+            // console.log(token);
             return res.send({ token });
           }
           return res.status(401).send({ message: 'Переданы некорректные данные' });
