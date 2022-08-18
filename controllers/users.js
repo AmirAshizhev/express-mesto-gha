@@ -21,9 +21,27 @@ exports.getUserById = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' });
+        res.status(400).send({ message: 'Переданы некорректные данныее' });
         return;
       }
+      res.status(500).send({ message: 'Произошла ошибка на сервере' });
+    });
+};
+
+exports.getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Пользователь не найден' });
+        return;
+      }
+      res.send({ data: user });
+    })
+    .catch(() => {
+      // if (err.name === 'CastError') {
+      //   res.status(400).send({ message: 'Переданы некорректные данные' });
+      //   return;
+      // }
       res.status(500).send({ message: 'Произошла ошибка на сервере' });
     });
 };
