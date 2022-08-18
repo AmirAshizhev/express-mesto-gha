@@ -29,7 +29,10 @@ exports.deleteCard = (req, res) => {
         res.status(404).send({ message: 'Карточка по указанному _id не найдена' });
         return;
       }
-      res.send({ data: card });
+      if (req.user._id === req.card.owner) {
+        res.send({ data: card });
+      }
+      res.status(403).send({ message: 'Эту карточу вы удалить не можете, она не ваша' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
