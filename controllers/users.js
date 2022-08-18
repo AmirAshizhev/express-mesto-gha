@@ -110,7 +110,7 @@ exports.login = (req, res) => {
     res.status(401).send({ message: 'Переданы невалидные данные' });
   }
 
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: 'Пользователь по указанномое email не найден' });
