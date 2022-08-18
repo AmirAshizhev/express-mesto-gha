@@ -32,7 +32,7 @@ exports.deleteCard = (req, res) => {
       if (req.user._id === card.owner) {
         res.status(200).send({ data: card });
       }
-      res.status(403).send({ message: 'Эту карточу вы удалить не можете, она не ваша' });
+      res.status(403).send({ message: 'Попытка удалить чужую карточку' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
