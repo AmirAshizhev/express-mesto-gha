@@ -6,6 +6,7 @@ const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-error');
+const { loginValidator, createUserValidator } = require('./middlewares/validators');
 
 const { PORT = 3000 } = process.env;
 
@@ -19,8 +20,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   //   useFindAndModify: false
 });
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', loginValidator, login);
+app.post('/signup', createUserValidator, createUser);
 
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
