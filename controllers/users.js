@@ -4,6 +4,7 @@ const { User } = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const UnauthorizedError = require('../errors/unauthorized-error');
+const ConflictError = require('../errors/conflict-error');
 
 exports.getUsers = (req, res, next) => {
   User.find({})
@@ -50,18 +51,29 @@ exports.createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  bcrypt.hash(password, 10)
-    .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
-    }))
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные в методы создания пользователя'));
-      } else {
-        next(err);
+  if (!email || !password) {
+    throw new BadRequestError('Не передан логин или пароль');
+  }
+
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        throw new ConflictError(' при регистрации указан email, который уже существует на сервере');
       }
-    });
+      bcrypt.hash(password, 10)
+        .then((hash) => User.create({
+          name, about, avatar, email, password: hash,
+        }))
+        .then((userObj) => res.send({ data: userObj }))
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            next(new BadRequestError('Переданы некорректные данные в методы создания пользователя'));
+          } else {
+            next(err);
+          }
+        });
+    })
+    .catch(next);
 };
 
 exports.updateProfileInfo = (req, res, next) => {
