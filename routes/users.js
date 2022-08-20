@@ -1,5 +1,5 @@
 const express = require('express');
-const {Joi, celebrate } = require('celebrate');
+// const {Joi, celebrate } = require('celebrate');
 
 const {
   getUsers, getUserById, updateProfileInfo, updateProfileAvatar, getCurrentUser,

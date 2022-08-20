@@ -2,9 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
-
+const NotFoundError = require('./errors/not-found-error');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,19 +22,25 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-// app.use(auth);
-
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Ресурс не найден' });
+app.use('*', () => {
+  throw new NotFoundError('Ресурс не найден');
 });
 
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  res.status(500).send({ message: 'На сервере произошла ошибка' });
+  const { statusCode = 500, message } = err;
+
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
+    });
+
+  next();
 });
 
 app.listen(PORT, () => {
