@@ -105,7 +105,7 @@ exports.login = (req, res, next) => {
 
   if (!email || !password) {
     // res.status(401).send({ message: 'Переданы невалидные данные' });
-    throw new UnauthorizedError('Не передан логин или пароль');
+    throw new BadRequestError('Не передан логин или пароль');
   }
 
   User.findOne({ email }).select('+password')
