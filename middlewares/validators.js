@@ -51,6 +51,18 @@ const createUserValidator = celebrate({
   }),
 });
 
+const addLikeValidator = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().length(24),
+  }),
+});
+
+const deleteLikeValidator = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().length(24),
+  }),
+});
+
 module.exports = {
   getUserByIdValidator,
   updateProfileInfoValidator,
@@ -59,4 +71,6 @@ module.exports = {
   deleteCardValidator,
   loginValidator,
   createUserValidator,
+  addLikeValidator,
+  deleteLikeValidator,
 };

@@ -124,7 +124,7 @@ exports.login = (req, res, next) => {
     .then((user) => {
       if (!user) {
         // return res.status(404).send({ message: 'Пользователь по указанномое email не найден' });
-        throw new NotFoundError('Пользователь по указанномое email не найден');
+        throw new UnauthorizedError('Пользователь по указанномое email не найден');
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
