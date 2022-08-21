@@ -24,20 +24,19 @@ exports.createCard = (req, res, next) => {
 };
 
 exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка по указанному _id не найдена');
       }
       if (req.user._id !== card.owner.toString()) {
         throw new ForbiddenError('Попытка удалить чужую карточку');
-      } else {
-        res.status(200).send({ data: card });
       }
+      card.remove()
+        .then(res.status(200).send({ data: card }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // res.status(400).send({ message: 'Переданы некорректные данные' });
         next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(err);
@@ -59,10 +58,6 @@ exports.likeCard = (req, res, next) => {
     })
     // .catch(next);
     .catch((err) => {
-      // if (err.name === 'CastError') {
-      //   res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
-      //   return;
-      // }
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные для постановки лайка'));
       } else {

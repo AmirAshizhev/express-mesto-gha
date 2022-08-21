@@ -4,7 +4,7 @@ const regular = /https?:\/\/(www\.)?([0-9A-Za-z-._~:/?#@!$&()*+,;=[\]]{2,265})\.
 
 const getUserByIdValidator = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24),
+    userId: Joi.string().length(24).hex(),
   }),
 });
 
@@ -30,7 +30,7 @@ const createCardValidator = celebrate({
 
 const deleteCardValidator = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().length(24),
+    cardId: Joi.string().length(24).hex(),
   }),
 });
 
@@ -51,15 +51,9 @@ const createUserValidator = celebrate({
   }),
 });
 
-const addLikeValidator = celebrate({
+const likeValidator = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().length(24),
-  }),
-});
-
-const deleteLikeValidator = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().length(24),
+    cardId: Joi.string().length(24).hex(),
   }),
 });
 
@@ -71,6 +65,6 @@ module.exports = {
   deleteCardValidator,
   loginValidator,
   createUserValidator,
-  addLikeValidator,
-  deleteLikeValidator,
+  likeValidator,
+  regular,
 };

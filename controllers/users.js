@@ -51,10 +51,6 @@ exports.createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  if (!email || !password) {
-    throw new BadRequestError('Не передан логин или пароль');
-  }
-
   User.findOne({ email })
     .then((user) => {
       if (user) {
@@ -122,15 +118,9 @@ exports.updateProfileAvatar = (req, res, next) => {
 exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    // res.status(401).send({ message: 'Переданы невалидные данные' });
-    throw new BadRequestError('Не передан логин или пароль');
-  }
-
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        // return res.status(404).send({ message: 'Пользователь по указанномое email не найден' });
         throw new UnauthorizedError('Пользователь по указанномое email не найден');
       }
       return bcrypt.compare(password, user.password)
@@ -140,7 +130,6 @@ exports.login = (req, res, next) => {
             // console.log(token);
             return res.send({ token });
           }
-          // return res.status(401).send({ message: 'Передан неверный логин или пароль' });
           throw new UnauthorizedError('Передан неверный логин или пароль');
         });
     })
