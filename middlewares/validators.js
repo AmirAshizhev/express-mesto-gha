@@ -1,5 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 
+const regular = /https?:\/\/(www\.)?([0-9A-Za-z-._~:/?#@!$&()*+,;=[\]]{2,265})\.[A-Za-z]{2,6}\b([A-Za-z-._~:/?#@!$&()*+,;=[\]]*)/;
+
 const getUserByIdValidator = celebrate({
   params: Joi.object().keys({
     userId: Joi.string().length(24),
@@ -15,7 +17,7 @@ const updateProfileInfoValidator = celebrate({
 
 const updateProfileAvatarValidator = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string(),
+    avatar: Joi.string().pattern(new RegExp(regular)),
   }),
 });
 
