@@ -31,6 +31,7 @@ exports.deleteCard = (req, res, next) => {
       }
       if (req.user._id === card.owner) {
         res.status(200).send({ data: card });
+        return;
       }
       throw new ForbiddenError('Попытка удалить чужую карточку');
     })
