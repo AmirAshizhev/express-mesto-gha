@@ -32,7 +32,7 @@ exports.deleteCard = (req, res, next) => {
       if (req.user._id !== card.owner.toString()) {
         throw new ForbiddenError('Попытка удалить чужую карточку');
       }
-      card.remove()
+      return card.remove()
         .then(res.status(200).send({ data: card }));
     })
     .catch((err) => {
