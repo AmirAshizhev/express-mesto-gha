@@ -136,7 +136,7 @@ exports.login = (req, res, next) => {
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (matched) {
-            const token = jwt.sign({ _id: user._id }, 'some-secret-word');
+            const token = jwt.sign({ _id: user._id }, 'some-secret-word', { expiresIn: '7d' });
             // console.log(token);
             return res.send({ token });
           }
